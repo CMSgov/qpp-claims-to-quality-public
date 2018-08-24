@@ -1,0 +1,18 @@
+# Overrides of Compose services for local development and CI testing.
+version: "2"
+services:
+ analyzer:
+    image: bayesimpact/claims_to_quality
+    volumes:
+      # Dev.
+      - ./Makefile:/home/tduser/analyzer/Makefile:ro
+      - ./data:/home/tduser/analyzer/data:ro
+      - ./audit:/home/tduser/analyzer/audit:rw
+      # Testing and Linting.
+      - ./.flake8:/home/tduser/analyzer/.flake8:ro
+      - ./tests:/home/tduser/analyzer/tests:ro
+      - ./.coveragerc:/home/tduser/analyzer/.coveragerc:ro
+    logging:
+      driver: "json-file"
+    environment:
+      - LOCAL_RUN=true

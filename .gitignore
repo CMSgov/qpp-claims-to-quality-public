@@ -1,0 +1,58 @@
+# Compiled python files
+*.py[cod]
+
+# iPython notebook backups
+.ipynb_checkpoints
+
+# Virtualenv
+env/
+venv/
+
+# local test outputs
+.cache
+
+# Excel file temporary builds
+~*.xlsx
+
+.DS_Store
+
+# Egg info
+*.egg-info
+
+# Sample data files
+data/sample_data/
+
+# Key files
+*.pem
+
+manifest.txt
+
+# PyCharm
+.idea/*
+*.iml
+
+# Node modules
+package-lock.json
+node_modules/*
+
+# Secrets
+vpcs/secrets/*
+
+# NewRelic Init
+*newrelic.ini
+
+# Environment secrets
+.env
+
+# Secret files
+*.secret
+
+# Terraform
+**/.terraform/
+**/terraform.tfstate.backup
+
+# Generated Procfile
+Procfile
+
+# PyTest cache
+**/.pytest_cache/
