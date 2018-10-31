@@ -1,0 +1,50 @@
+# Keys and Tokens
+
+###############################################
+## Patterns commonly used in the CMS C2Q App ##
+###############################################
+
+## api key assignments, will fire on google maps and newrelic
+.*_key[:=]\s*['"][A-Za-z0-9-]{39}['"]
+.*_key[:=]\s*[A-Za-z0-9-]{39}
+.*_key[:=]\s*<%= ENV.fetch.*[A-Za-z0-9-]{39}
+.*_key[:=]\s*<%= ENV.fetch.*['"][A-Za-z0-9-]{39}['"]
+
+## aws access key id
+aws_access_key_id[:=]\s*[A-Z0-9]{20}
+aws_access_key_id[:=]\s*['"][A-Z0-9]{20}['"]
+aws_access_key_id[:=]\s*<%= ENV.fetch.*[A-Z0-9]{20}
+aws_access_key_id[:=]\s*<%= ENV.fetch.*['"][A-Z0-9]{20}['"]
+
+## aws_secret_access_key
+aws_secret_access_key[:=]\s*[A-Za-z0-9/+]{40}
+aws_secret_access_key[:=]\s*['"][A-Za-z0-9/+]{40}['"]
+aws_secret_access_key[:=]\s*<%= ENV.fetch.*[A-Z0-9]{20}
+aws_secret_access_key[:=]\s*<%= ENV.fetch.*['"][A-Z0-9]{20}['"]
+
+##################################################
+## Generic secret patterns modified from DC.gov ##
+##################################################
+
+## password assignments
+.*password[:=]\s*<%= ENV.fetch.*[A-Za-z0-9-]
+
+# Credit Cards
+# Credit Cards: Mastercard
+[:=]\s*5[0-9]{3}[ -]?[0-9]{4}[ -]?[0-9]{4}[ -]?[0-9]{4}
+# Credit Cards:Discover
+[:=]\s*6011[ -]?[0-9]{4}[ -]?[0-9]{4}[ -]?[0-9]{4}
+# Credit Cards:VISA
+[:=]\s*4[0-9]{3}[ -]?[0-9]{4}[ -]?[0-9]{4}[ -]?[0-9]{4}
+# Credit Cards:AMEX
+[:=]\s*3[47][0-9]{2}[ -]?[0-9]{6}[ -]?[0-9]{5}
+
+# U.S. Passport
+.*passport.*[:=]\s*[A-Za-z0-9-]{6,9}
+
+# U.S. Passport Card
+.*passport.*[:=]\s*C0[0-9]{7}
+
+# U.S. SSN, Note: may produce false-positives, refer to README for more details.
+.*(ssn).*[:=]\s*[0-9-]{9,11}
+.*(soc).*[:=]\s*[0-9-]{9,11}

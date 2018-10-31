@@ -1,0 +1,26 @@
+# TODO: Create a separated test service.
+version: "2"
+services:
+  # Analyzer service listening to the SQS queue and processing incoming messages.
+  analyzer:
+    image: bayesimpact/claims_to_quality
+    build:
+      context: .
+    volumes:
+      # Required files.
+      - ./claims_to_quality:/usr/local/lib/python3.6/site-packages/claims_to_quality:ro
+      - ./claims_to_quality:/home/tduser/analyzer/claims_to_quality:ro
+      - ./runners:/home/tduser/analyzer/runners:ro
+      - ./supervisors/analyzer_supervisord.cfg.template:/home/tduser/analyzer/analyzer_supervisord.cfg.template:ro
+      - ./supervisors/analyzer_supervisord.cfg:/home/tduser/analyzer/analyzer_supervisord.cfg:rw
+      - ./bin/:/home/tduser/analyzer/bin/:ro
+      # NewRelic.
+      - ./newrelic.ini:/home/tduser/analyzer/newrelic.ini
+      # Logs.
+      - /tmp/supervisord:/var/log/supervisord:rw
+      # Environment file for delete.
+      - .env:/home/tduser/analyzer/.env:rw
+    env_file:
+      - .env
+    entrypoint: ["./bin/starter.sh"]
+    command: ["analyzer"]
