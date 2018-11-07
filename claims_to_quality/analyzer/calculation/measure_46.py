@@ -75,10 +75,11 @@ class Measure46(VisitMeasure):
         }
     }
 
+    DISCHARGE_PERIOD = 30   # Discharge period to consider in days.
+
     def __init__(self, *args, **kwargs):
         """Instantiate a Measure46."""
         super(Measure46, self).__init__(*args, **kwargs)
-        self._discharge_period = 30  # Discharge period to consider in days.
         self.discharge_dates_by_beneficiary = collections.defaultdict(set)
 
     @newrelic.agent.function_trace(name='execute-measure-46', group='Task')
@@ -253,7 +254,7 @@ class Measure46(VisitMeasure):
                 datetime.timedelta(
                     days=0
                 ) <= claim.clm_from_dt - date <= datetime.timedelta(
-                    days=self._discharge_period
+                    days=self.DISCHARGE_PERIOD
                 )
                 for date in date_set
             ]))
@@ -269,7 +270,7 @@ class Measure46(VisitMeasure):
         discharge_date_query = idr_queries.get_discharge_date_query(
             tins=tins,
             npis=npis,
-            discharge_period=self._discharge_period,
+            discharge_period=self.DISCHARGE_PERIOD,
             hidden_codes=self.HIDDEN_CODES
         )
 
@@ -288,6 +289,7 @@ class Measure46(VisitMeasure):
                 discharge_dates_by_beneficiary[bene_sk]
             )
 
+        # If some beneficiaries were found to have no discharges, record that fact.
         for bene_sk in bene_sks:
             if bene_sk not in self.discharge_dates_by_beneficiary:
                 self.discharge_dates_by_beneficiary[bene_sk] = set()

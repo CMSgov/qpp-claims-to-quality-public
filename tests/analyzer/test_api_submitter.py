@@ -157,7 +157,8 @@ class TestAPISubmitterFunctions():
         params = {
             'itemsPerPage': 99999,
             'nationalProviderIdentifier':
-                self.measurement_set.data['submission']['nationalProviderIdentifier']
+                self.measurement_set.data['submission']['nationalProviderIdentifier'],
+            'performanceYear': str(self.measurement_set.data['submission']['performanceYear']),
         }
 
         headers = api_submitter.get_headers()
@@ -190,7 +191,8 @@ class TestAPISubmitterFunctions():
         params = {
             'itemsPerPage': 99999,
             'nationalProviderIdentifier':
-                self.measurement_set.data['submission']['nationalProviderIdentifier']
+                self.measurement_set.data['submission']['nationalProviderIdentifier'],
+            'performanceYear': str(self.measurement_set.data['submission']['performanceYear'])
         }
 
         headers = api_submitter.get_headers()
@@ -198,7 +200,6 @@ class TestAPISubmitterFunctions():
             {'qpp-taxpayer-identification-number':
                 self.measurement_set.data['submission']['taxpayerIdentificationNumber']}
         )
-
         mock_get.side_effect = mocked_requests_get
 
         with pytest.raises(api_submitter.NoMatchingSubmissionsException):

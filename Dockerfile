@@ -1,5 +1,7 @@
 FROM bayesimpact/teradata-connector:latest
 
+RUN rm -rf /code
+
 RUN chown -R root /home/tduser/
 WORKDIR /home/tduser/
 

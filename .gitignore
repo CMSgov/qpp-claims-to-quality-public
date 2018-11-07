@@ -56,3 +56,27 @@ Procfile
 
 # PyTest cache
 **/.pytest_cache/
+
+# CoreVPC
+corevpc.*
+
+# Open-Source Control
+data_analysis/*
+deploy/*
+runners/*
+terraform/*
+vpcs/*
+
+tests/extractor/test_build_discharge_table.py
+tests/extractor/test_queue_population_query.py
+tests/lib/connectors/test_idr_queries.py
+tests/lib/connectors/test_tunneling.py
+claims_to_quality/lib/connectors/tunneling.py
+claims_to_quality/extractor/queue_population/populator.py
+claims_to_quality/extractor/queue_population/population_query.py
+claims_to_quality/extractor/prepare_idr/build_discharge_table.py
+claims_to_quality/extractor/prepare_idr/__init__.py
+audit/performance_testing/max_claim_by_batch.py
+audit/targeted_review.py
+bin/resource_availability_check.py
+bin/tunnel.py

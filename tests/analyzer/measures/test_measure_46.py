@@ -327,7 +327,7 @@ class TestMeasure46EligibilityFiltering():
 
     def test_discharge_period(self):
         """Test that discharge period is set properly."""
-        assert self.measure._discharge_period == 30
+        assert self.measure.DISCHARGE_PERIOD == 30
 
     @mock.patch(
         'claims_to_quality.analyzer.calculation.measure_46.'

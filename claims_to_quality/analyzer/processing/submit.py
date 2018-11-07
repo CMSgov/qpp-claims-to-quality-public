@@ -10,6 +10,8 @@ from claims_to_quality.lib.qpp_logging import logging_config
 
 import newrelic.agent
 
+import requests
+
 logger = logging_config.get_logger(__name__)
 
 
@@ -46,22 +48,32 @@ class Submitter(object):
         Submit batch of processed providers.
 
         Expecting a list of provider dicts with measurement_set info.
-        Provider should contain:
-        - tin
-        - npi
-        - message (SQS message)
-        - processing_error
-        - measurement_set if available
+        Provider should contain the following keys:
+            - tin
+            - npi
+            - message (SQS message)
+            - processing_error
+            - measurement_set (if available)
         """
         for provider in providers:
-            # If there is a processing error, do not submit
-            # and do not delete SQS message from queue.
+            # If there is a processing error, do not submit and do not delete the SQS message.
             if provider['processing_error']:
                 continue
+
             measurement_set = provider.get('measurement_set', None)
             provider_tin = provider.get('tin')
             provider_npi = provider.get('npi')
-            self._send_submissions(provider_tin, provider_npi, measurement_set)
+
+            try:
+                self._send_submissions(provider_tin, provider_npi, measurement_set)
+            except requests.exceptions.HTTPError as e:
+                # If there is a submission error, do not delete the SQS message from the queue.
+                logger.warning(str(e) + 'NPI: {}'.format(provider_npi))
+                logger.info('1 providers errored out.')
+                continue
+
+            # If processing and submission were successful and `remove_messages` is True,
+            # remove the SQS messages and log the removal.
             self._process_after_submission(provider)
 
     @newrelic.agent.function_trace(name='send-submissions-if-not-empty', group='Task')

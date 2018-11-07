@@ -106,7 +106,7 @@ def _submit_to_measurement_sets_api(measurement_set, patch_update):
 
 @newrelic.agent.function_trace(name='get-verify-submissions', group='Task')
 @retry(stop_max_attempt_number=STOP_MAX_ATTEMPT_NUMBER, wait_fixed=WAIT_FIXED_MILLISECONDS)
-def get_submissions(npi=None, tin=None, start_index=0):
+def get_submissions(npi=None, tin=None, performance_year=None, start_index=0):
     """
     Simple GET request to check if submissions have been made.
 
@@ -134,24 +134,12 @@ def get_submissions(npi=None, tin=None, start_index=0):
     if tin:
         headers.update({'qpp-taxpayer-identification-number': tin})
 
+    if performance_year:
+        params['performanceYear'] = str(performance_year)
+
     response = requests.get(endpoint_url, params=params, headers=headers)
-
     # If the request failed, raise an error.
-    http_error = False
-    try:
-        response.raise_for_status()
-    except requests.exceptions.HTTPError:
-        http_error = True
-    if http_error:
-        logger.warning('HTTP error {} during get_existing_submissions.'.format(
-            response.status_code
-        ))
-        raise requests.exceptions.HTTPError(
-            'HTTP error {} during get_existing_submissions.'.format(
-                response.status_code
-            ), response=response
-        )
-
+    _handle_http_error(response, 'get_submissions')
     return response.json()
 
 
@@ -169,13 +157,14 @@ def get_existing_submissions(measurement_set):
         'submissions'
     )
 
+    headers = get_headers()
+    # Restrict attention to measurement sets with the same NPI, TIN, and performance year.
     params = {
         'itemsPerPage': 99999,
         'nationalProviderIdentifier':
-            measurement_set.data['submission']['nationalProviderIdentifier']
+            measurement_set.data['submission']['nationalProviderIdentifier'],
+        'performanceYear': str(measurement_set.data['submission']['performanceYear'])
     }
-
-    headers = get_headers()
     headers.update(
         {'qpp-taxpayer-identification-number':
             measurement_set.data['submission']['taxpayerIdentificationNumber']}
@@ -183,29 +172,12 @@ def get_existing_submissions(measurement_set):
 
     # Look for matching submissions.
     response = requests.get(endpoint_url, params=params, headers=headers)
-
     # If the request failed, raise an error.
-    http_error = False
-    try:
-        response.raise_for_status()
-    except requests.exceptions.HTTPError:
-        http_error = True
-    if http_error:
-        raise requests.exceptions.HTTPError(
-            'HTTP error {} during get_existing_submissions.'.format(
-                response.status_code
-            ), response=response
-        )
-
+    _handle_http_error(response, 'get_existing_submissions')
     existing_submissions = response.json()['data']['submissions']
-    existing_submissions_in_same_year = [
-        s for s in existing_submissions
-        if s['performanceYear'] == measurement_set.data['submission']['performanceYear']
-    ]
-
     # If at least one submission already exists for performance year, return the first match.
-    if len(existing_submissions_in_same_year) > 0:
-        return existing_submissions_in_same_year[0]
+    if len(existing_submissions) > 0:
+        return existing_submissions[0]
     # Otherwise, raise an exception.
     else:
         raise NoMatchingSubmissionsException

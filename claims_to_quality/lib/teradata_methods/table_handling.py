@@ -12,7 +12,7 @@ DROP_TABLE_BASE_QUERY = 'DROP TABLE {database}.{table};'
 
 def _drop_table_if_exists(table_name, database_name):
     """Drop table if it exists."""
-    if _if_table_exists(table_name):
+    if _if_table_exists(table_name, database_name):
         query = DROP_TABLE_BASE_QUERY.format(
             database=database_name,
             table=table_name

@@ -203,7 +203,7 @@ CONFIG = {
         'as_was_date': datetime.date.today(),
         'measures': ['all'],
         'excluded_measures': [],
-        'infer_performance_period': True
+        'infer_performance_period': False
     },
     'submission': {
         'endpoint': 'https://qpp-submissions-sandbox.navapbc.com/submissions/',
@@ -237,6 +237,7 @@ CONFIG = {
     'teradata': {
         'access_layer_name': 'PRIVATE',
         'medicare_vdm_name': 'PRIVATE',
+        'adm_name': 'PRIVATE',
         'config': {
             'appName': 'qpp-claims-to-quality-test',
             'version': '0',
@@ -287,6 +288,7 @@ CONFIG_DEV = {
     'teradata': {
         'access_layer_name': 'PRIVATE',
         'medicare_vdm_name': 'PRIVATE',
+        'adm_name': 'PRIVATE',
         'config': {
             'appName': 'qpp-claims-to-quality-dev'
         }
@@ -312,6 +314,7 @@ CONFIG_IMPL = {
     'teradata': {
         'access_layer_name': 'PRIVATE',
         'medicare_vdm_name': 'PRIVATE',
+        'medicare_vdm_name': 'PRIVATE',
         'config': {
             'appName': 'qpp-claims-to-quality-impl'
         }
@@ -326,7 +329,7 @@ CONFIG_PRD = {
     'submission': {
         'endpoint': 'https://qpp.cms.gov/api/submissions/',
         'obscure_providers': False,
-        'send_submissions': False,
+        'send_submissions': True,
         'write_submissions_to_file': False,
     },
     'aws': {
@@ -337,6 +340,7 @@ CONFIG_PRD = {
     'teradata': {
         'access_layer_name': 'PRIVATE',
         'medicare_vdm_name': 'PRIVATE',
+        'adm_name': 'PRIVATE',
         'config': {
             'appName': 'qpp-claims-to-quality-prd'
         }
