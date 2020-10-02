@@ -19,3 +19,5 @@ flake8==3.5.0
 flake8-import-order==0.17
 flake8-quotes==1.0.0
 pep257==0.7.0
+
+urllib3>=1.25.9 # not directly required, pinned by Snyk to avoid a vulnerability
