@@ -1,3 +1,9 @@
+This repository has been archived and is no longer maintained.
+
+The code is provided for historical reference and may contain unpatched or unknown vulnerabilities.
+
+It should not be used in production systems.
+
 # MIPS - Claims-to-Quality Analyzer - Open-Source
 This is the open-source version of the C2Q Analyzer repository.
 
